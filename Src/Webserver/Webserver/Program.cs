@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 
 namespace Webserver
@@ -17,7 +18,7 @@ namespace Webserver
             HttpListener listener = new HttpListener();
             // URI prefixes are required,
             // for example "http://contoso.com:8080/index/".
-            string prefixes = "http://localhost:8080/../../Content/"; // Fortsätt härifrån
+            string prefixes = "http://localhost:8080/"; // Fortsätt härifrån
             // Add the prefixes.
             listener.Prefixes.Add(prefixes);
             
@@ -28,12 +29,12 @@ namespace Webserver
             // Note: The GetContext method blocks while waiting for a request.
             HttpListenerContext context = listener.GetContext();
             HttpListenerRequest request = context.Request;
-
+            
             // Obtain a response object.
             HttpListenerResponse response = context.Response;
 
             // Construct a response.
-            string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+            string responseString = File.ReadAllText($"../../../../../../Content/{request.RawUrl}");
             byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
 
             // Get a response stream and write the response to it.
